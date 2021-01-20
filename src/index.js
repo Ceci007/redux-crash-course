@@ -1,10 +1,8 @@
-import store from './customStore';
-import * as actions from './actions';
+import configureStore from "./store/configureStore";
 
-store.subscribe(() => {
-  console.log("Store changed!");
-});
+const store = configureStore();
 
-store.dispatch(actions.bugAdded("Bug 1"));
-
-console.log(store.getState());
+store.dispatch({
+  type: "error",
+  payload: { message: "An error occurred" }
+})
