@@ -10,6 +10,7 @@ const slice = createSlice({
     loading: false,
     lastFetch: null
   },
+  // reducers
   reducers: {
     bugsRequested: (bugs, action) => {
       bugs.loading = true;
@@ -26,7 +27,7 @@ const slice = createSlice({
     },
 
     bugAssignedToUser: (bugs, action) => {
-      const { bugId, userId } = action.payload;
+      const { id: bugId, userId } = action.payload;
       const index = bugs.list.findIndex(bug => bug.id === bugId);
       bugs.list[index].userId = userId;
     },
@@ -54,6 +55,7 @@ export default slice.reducer;
 
 const url = "/bugs";
 
+// actions
 export const loadBugs = () => (dispatch, getState) => {
   const { lastFetch } = getState().entities.bugs;
   
@@ -84,6 +86,14 @@ export const resolveBug = id => apiCallBegan({
   onSuccess: bugResolved.type
 });
 
+export const assignBugToUser = (bugId, userId) => apiCallBegan({
+  url: url + '/' + bugId,
+  method: 'patch',
+  data: { userId },
+  onSuccess: bugAssignedToUser.type
+});
+
+// selectors
 export const getUnresolvedBugs = createSelector(
   state => state.entities.bugs,
   state => state.entities.projects,
